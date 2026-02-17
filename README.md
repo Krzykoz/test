@@ -1,5 +1,7 @@
 # Azure Key Vault RBAC Migrator
 
+![Build macOS Universal App](https://github.com/Krzykoz/test/actions/workflows/build-macos.yml/badge.svg)
+
 A desktop application built with Tauri and React that helps migrate Azure Key Vault access policies to RBAC (Role-Based Access Control).
 
 ## Features
@@ -48,6 +50,39 @@ npm run tauri build
 Run the application in development mode:
 ```bash
 npm run tauri dev
+```
+
+## Building for Distribution
+
+### macOS Universal Binary
+
+The project includes a GitHub Actions workflow that automatically builds a universal macOS app (supporting both Intel and Apple Silicon):
+
+**Automated Build**: The workflow runs on:
+- Push to `main` or `release/**` branches
+- Version tags (e.g., `v1.0.0`)
+- Pull requests to `main`
+- Manual trigger via GitHub Actions UI
+
+**Build Artifacts**: The workflow produces:
+- `.dmg` installer (universal binary)
+- `.app` bundle (universal binary)
+
+**Manual Build**:
+```bash
+# Install Rust targets for macOS universal binary
+rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+# Build frontend
+npm run build
+
+# Build universal binary
+npm run tauri build -- --target universal-apple-darwin
+```
+
+The universal binary will be located at:
+```
+src-tauri/target/universal-apple-darwin/release/bundle/
 ```
 
 ## Usage
