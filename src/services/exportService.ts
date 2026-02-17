@@ -134,8 +134,7 @@ export class ExportService {
         lines.push(`# Missing ${recommendation.missing.length} permission(s)`);
       }
       
-      recommendation.roleIds.forEach((_roleId, index) => {
-        const roleName = recommendation.roles[index];
+      recommendation.roles.forEach((roleName) => {
         lines.push(
           `New-AzRoleAssignment -ObjectId "${identityAnalysis.identity.objectId}" ` +
           `-RoleDefinitionName "${roleName}" ` +

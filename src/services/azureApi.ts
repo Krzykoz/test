@@ -209,11 +209,21 @@ export class AzureApiService {
     const batchSize = 10;
     for (let i = 0; i < objectIds.length; i += batchSize) {
       const batch = objectIds.slice(i, i + batchSize);
-      const results = await Promise.all(
+      const results = await Promise.allSettled(
         batch.map(id => this.resolveIdentity(id))
       );
-      results.forEach(identity => {
-        identities.set(identity.objectId, identity);
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          identities.set(result.value.objectId, result.value);
+        } else {
+          // Log warning for failed resolutions
+          console.warn(`Failed to resolve identity ${batch[index]}:`, result.reason);
+          // Add as Unknown identity
+          identities.set(batch[index], {
+            objectId: batch[index],
+            type: 'Unknown',
+          });
+        }
       });
     }
 
